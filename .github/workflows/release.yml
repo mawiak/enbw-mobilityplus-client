@@ -15,6 +15,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic-release.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic-release.outputs.new_release_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,9 +47,9 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
+        id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: npx semantic-release
 
   publish-to-pypi:
@@ -82,5 +85,3 @@ jobs:
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_TOKEN }}
