@@ -1,3 +1,15 @@
+# 1.0.0 (2026-07-15)
+
+
+### Bug Fixes
+
+* expose release outputs and use PyPI trusted publishing ([7da964d](https://github.com/mawiak/enbw-mobilityplus-client/commit/7da964d331f61776a10d4ff2a10faf19088da4cc))
+
+
+### Features
+
+* initial implementation of EnBW mobility+ API client ([5ca8c1a](https://github.com/mawiak/enbw-mobilityplus-client/commit/5ca8c1a3fcc674db90ed82ddb06cc29f0c31ea7d))
+
 # 1.0.0 (2026-07-14)
 
 
