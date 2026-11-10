@@ -339,6 +339,10 @@ class EnBWMobilityPlusClient:
                 # Follow the redirect
                 current_response = self.client.get(location)
                 redirect_count += 1
+            elif current_response.status_code == 200 and self._is_passkey_enrollment(current_response):
+                # Auth0 may interrupt the flow with a passkey enrollment prompt - skip it ("Not now")
+                current_response = self._skip_passkey_enrollment(current_response)
+                redirect_count += 1
             elif current_response.status_code == 200:
                 # Check response text for redirect or code
                 if "code=" in current_response.text:
@@ -438,6 +442,34 @@ class EnBWMobilityPlusClient:
             raise ValueError(f"Failed to fetch user profile: {e}. Unable to initialize charging account.")
 
         return token
+
+    @staticmethod
+    def _is_passkey_enrollment(response: httpx.Response) -> bool:
+        """Check if the response is an Auth0 passkey enrollment prompt"""
+        return response.url.path.startswith("/u/passkey-enrollment")
+
+    def _skip_passkey_enrollment(self, response: httpx.Response) -> httpx.Response:
+        """Decline the Auth0 passkey enrollment prompt and continue the login flow"""
+        enrollment_url = str(response.url)
+        enrollment_state = response.url.params.get("state", "")
+
+        skip_data = {
+            "state": enrollment_state,
+            "action": "abort-passkey-enrollment",
+        }
+        # The local variant offers a "don't show again" checkbox
+        if response.url.path.startswith("/u/passkey-enrollment-local"):
+            skip_data["dont-show-again"] = "true"
+
+        return self.client.post(
+            enrollment_url,
+            data=skip_data,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Origin": self.auth_base_url,
+                "Referer": enrollment_url,
+            },
+        )
 
     def refresh_access_token(self) -> TokenResponse:
         """
