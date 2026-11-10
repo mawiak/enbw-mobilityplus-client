@@ -6,7 +6,7 @@ import json
 import re
 import secrets
 import uuid
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 from urllib.parse import parse_qs, urljoin, urlparse
 
 import httpx
