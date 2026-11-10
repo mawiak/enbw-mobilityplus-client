@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/mawiak/enbw-mobilityplus-client/compare/v1.0.0...v1.0.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* skip passkey enrollment prompt during login ([9c93d12](https://github.com/mawiak/enbw-mobilityplus-client/commit/9c93d12aaa8209a33257f015e8e8c1e5735cc854))
+
 # 1.0.0 (2026-07-15)
 
 
